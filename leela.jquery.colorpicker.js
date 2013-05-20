@@ -1,5 +1,5 @@
 $(function(){
-  
+	
 	$.fn.colorPicker = function(options) {
 		var colorDefault = {
 			rows: 4,
@@ -10,6 +10,7 @@ $(function(){
 			cellWidth: 10,
 			cellHeight: 10,
 			cellspacing: 5,
+			mouseOverAction: false,
 			showCode: 0,
 			colorData: [
 			'#ffffff',
@@ -34,7 +35,6 @@ $(function(){
 			var $this = $(this);
 			var htmlData = '<div style="z-index: '+colorDefault.zindex+';position: absolute;display: none; background-color: white; border: 1px solid #CCC;" class="colorpickerClass">';
 			var count = 0;
-			console.log(colorDefault);
 			for (i=colorDefault.rows; i>0; i--) {
 				for (j=colorDefault.cols; j>0; j--) {
 					htmlData += '<div  class="color_cell" title="'+colorDefault.colorData[count]+'"  style="background-color:'+colorDefault.colorData[count]+';float: left;"></div>';
@@ -84,5 +84,5 @@ $(function(){
 	}
 	$('body').bind('click', function(e) {
 		$('.colorpickerClass').hide();
-	})
+	});
 });
