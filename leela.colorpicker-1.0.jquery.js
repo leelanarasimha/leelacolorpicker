@@ -82,7 +82,7 @@ $(function(){
 		});
 		
 	}
-	$('body').bind('click', function(e) {
+	$(document).bind('click', function(e) {
 		$('.colorpickerClass').hide();
 	});
 });
