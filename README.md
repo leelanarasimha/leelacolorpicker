@@ -13,7 +13,7 @@ Make sure to load it before Color Picker (there's no other dependencies!).
 ### Implementation
 
 	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
-	<script src='leela.colorpicker.jquery.min.js'></script>
+	<script src='leela.colorpicker-1.0.jquery.min.js'></script>
 	
 
 #### Plugin Usage
