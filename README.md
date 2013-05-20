@@ -12,9 +12,9 @@ Make sure to load it before Color Picker (there's no other dependencies!).
 
 Let us know how you are using leela Color Picker...
 
-<h1>Contributor</h1>
+<h2>Contributor</h2>
 Leela Narasimha Reddy - leela.narsimha@gmail.com
 
-<h1>Issues & Suggestions</h1>
+<h2>Issues & Suggestions</h2>
 
 Please report any bugs or feature requests here: https://github.com/leelanarasimha/leelacolorpicker/issues
