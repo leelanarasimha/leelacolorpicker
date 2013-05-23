@@ -28,9 +28,14 @@ Make sure to load it before Color Picker (there's no other dependencies!).
 		cellHeight: 20, // height of each cell showing color
 		zindex: 200, // zindex for the color picker
 		showCode: 0, // showing code on the bottom if made as 1
-		selectColor: function(colorcode) { // function upon selecting the color
+		onSelect: function(colorcode) { // function upon selecting the color
 		// Use Your ajax code to use this color code
 		},
+		onmouseover: function(colorcode) { // function upon selecting the color
+		// Use Your ajax code to use this color code
+		},
+		colorData: ['red','blue','orange'] //Custom colors if mentioned loads the colors from the array. 
+		//Accepted hexadecimal colorcodes also
 	});
 
 All are not mandatory. If mentioned takes the values if not default values are assigned.
