@@ -1,31 +1,29 @@
 <!doctype html>
 <html>
   <head>
-  	<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
-		<script type='text/javascript' src='jquery.colorpicker.js'></script>
-		<script type='text/javascript'>
-			$(function() {
-			$('h1').colorPicker({
-			rows: 8,
-			cols: 8,
-			top: 20,
-			left: 20,
-			cellspacing: 4,
-			cellWidth: 20,
-			cellHeight: 20,
-			zindex: 200,
-			showCode: 0,
-			selectColor: function(colorcode) {
-			console.log(colorcode);
-				// Use Your ajax code to use this color code
-			},
-			});
-			});
-		</script>
+  	
 	</head>
 	<body>
 		<h1>hai</h1>
-		<h1>hai</h1>
+                
+                <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
+		<script type='text/javascript' src='leela.colorpicker-1.0.jquery.js'></script>
+		<script type='text/javascript'>
+			(function($) {
+			$('h1').colorPicker({
+                            rows: 6,
+                            cols: 6,
+							showCode: 0,
+							onSelect: function(colorCode) {
+								console.log($(this));
+							},
+							colorData: ['red','blue','yellow','black'],
+							onmouseover: function(colorCode) {
+							}
+                        });
+						
+			})(jQuery);
+		</script>
 		
 	</body>
 </html>
