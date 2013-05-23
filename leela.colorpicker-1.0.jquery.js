@@ -1,88 +1,147 @@
-$(function(){
-	
-	$.fn.colorPicker = function(options) {
-		var colorDefault = {
-			rows: 4,
-			cols: 4,
-			top: 0,
-			left: 0,
-			zindex: 1,
-			cellWidth: 10,
-			cellHeight: 10,
-			cellspacing: 5,
-			mouseOverAction: false,
-			showCode: 0,
-			colorData: [
-			'#ffffff',
-			'#cceeff',
-			'#ccccff',
-			'#e5ccff',
-			'#ffcccc',
-			'#ffe5cc',
-			'#e5ccff',
-			'#ffffcc',
-			'#ccffcc',
-			'#99ccff',
-			'#cc99ff',
-			'#ff99ff','#99ff99','#c0c0c0','#6666ff','#ff66fe','#ffb266','#66ff66', '#999999','#399cfd','#9933ff','#ff3333','#feff33','#666666','#feff00','#444444'],
-			selectColor: function(colorCode) {},
-		}
-		$.extend(colorDefault,options);
+//Utility
+if (typeof Object.create !== 'funtion') {
+    Object.create = function(obj) {
+        function F() {};
+        F.prototype = obj;
+        return new F();
+    }
+}
+
+(function($){
+    var Picker = {
+        init: function(options, elem) {
+            var self = this;
+            self.elem = elem;
+            self.$elem = $(elem);
+            self.options = $.extend({}, $.fn.colorPicker.options, options);
+            self.construct();
+        },
+        
+        getHtmlData: function() {
+            var self = this;
+            var htmlData = '<div style="z-index: '+self.options.zindex+';position: absolute;display: none; background-color: white; border: 1px solid #CCC;" class="colorpickerClass">';
+            var count = 0;
+            for (var i=self.options.rows; i>0; i--) {
+            for (var j=self.options.cols; j>0; j--) {
+                    htmlData += '<div  class="color_cell" title="'+self.options.colorData[count]+'"  style="background-color:'+self.options.colorData[count]+';float: left;"></div>';
+                    if (count == self.options.colorData.length) count = 0;
+                    count++;
+                }
+                htmlData += '<div class="no-space" style="clear: both;"></div>';
+            }
+            if (self.options.showCode) {
+                htmlData += '<div class="show_code" style="text-align: center;font-size: 12px;border-top: 1px solid #ccc;"></div>'
+            }
+            htmlData += '</div>';
+            return htmlData;
+        },
+        attachToElem: function(htmlData) {
+            var self = this;
+            self.$elem.append(htmlData);
+            self.$elem.css('position','relative');
+            $('.colorpickerClass').css('top',self.options.top).css('left',self.options.left);
+            self.$elem.find('.colorpickerClass div.color_cell').css('width', self.options.cellWidth).css('height',self.options.cellHeight).css('margin',self.options.cellSpacing).css('outline','1px solid #CCC');
+            self.$elem.find('.colorpickerClass div.no-space').css('width','0px').css('height','0px').css('border','none');
+        },
 		
-		$('.colorpickerClass').remove();
-		
-		this.each(function(){
-			var $this = $(this);
-			var htmlData = '<div style="z-index: '+colorDefault.zindex+';position: absolute;display: none; background-color: white; border: 1px solid #CCC;" class="colorpickerClass">';
-			var count = 0;
-			for (i=colorDefault.rows; i>0; i--) {
-				for (j=colorDefault.cols; j>0; j--) {
-					htmlData += '<div  class="color_cell" title="'+colorDefault.colorData[count]+'"  style="background-color:'+colorDefault.colorData[count]+';float: left;"></div>';
-					if (count == colorDefault.colorData.length) count = 0;
-					count++;
+        enableClick: function() {
+            var self = this;
+            self.$elem.on('click', function(e){
+                e.stopPropagation();
+                $(this).find('.colorpickerClass').show();
+            });
+            $(document).bind('click', function() {
+                 $('.colorpickerClass').hide();
+            });
+			$('div.color_cell').on('mouseover', function() {
+				if (self.options.showCode === 1) {
+					$('div.show_code').html($(this).attr('title'));
 				}
-				htmlData += '<div class="no-space" style="clear: both;"></div>';
-			}
-			if (colorDefault.showCode) {
-				htmlData += '<div class="show_code"></div>'
-			}
-			htmlData += '</div>';
-			
-			$this.css('position', 'relative');
-			$this.append(htmlData);
-			$('.colorpickerClass').css('top',colorDefault.top).css('left',colorDefault.left);
-			$this.find('.colorpickerClass div.color_cell').css('width', colorDefault.cellWidth).css('height',colorDefault.cellHeight).css('margin',colorDefault.cellspacing).css('outline','1px solid #CCC');
-			$this.find('.colorpickerClass div.no-space').css('width','0px').css('height','0px').css('border','none');
-			$this.on('click', function(e){
-				e.preventDefault();
-				e.stopPropagation();
-				$('.colorpickerClass').hide();
-				$('.show_code').hide();
-				$(this).find('.colorpickerClass').show();
 			});
-		});
+        },
 		
-		$('.colorpickerClass div.color_cell').on('click', function(e){
-			e.stopPropagation();
-			var colorCode = $(this).attr('title');
-			$('.colorpickerClass').hide();
-			colorDefault.selectColor.call( this, colorCode );
-			
-		});
+		createColorCodes : function(colorCodeLimit) {
+			var self = this;
+			var colorCodes = [];
+			if (self.options.colorData.length === 0) {
+				var colorLetters = ['A','0','B','1','2','C','3','D','4','E','5','F','6','7','8','9'];
+				for (var i = 0, len = colorLetters.length; i < len; i++ ) {
+					for ( var j = i, len2 = colorLetters.length; j < len2; j++) {
+						for ( var k = j, len3 = colorLetters.length; k < len3; k++) {
+							if (colorCodes.length < colorCodeLimit) {
+								colorCodes.push('#'+colorLetters[i]+colorLetters[j]+colorLetters[k]);
+							} else {
+								break;
+							}
+						}
+					}
+				}
+			} else {
+				var colorLimit = self.options.rows * self.options.cols;
+				var colorDataLength = self.options.colorData.length;
+				var count = 0;
+				for (var i = 0, len = colorLimit; i < len; i++ ) {
+					colorCodes.push(self.options.colorData[count]);
+					if ( colorDataLength-1 <= count ) {
+						count = 0;
+					} else {
+						count ++;
+					}
+					
+				}
+			}
+			return colorCodes;
+		},
 		
-		$('.colorpickerClass div.color_cell').on('mouseover', function(e){
-			$('.show_code').show();
-			$(this).css('outline','1px solid #AAA').css('cursor','pointer');
-			var colorCode = $(this).attr('title');
-			$('.show_code').html(colorCode).css('font-size','12px').css('border-top','1px solid #CCC').css('text-align','center').css('background-color',colorCode);
-		});
+		getonSelect: function() {
+			var self = this;
+			if (typeof self.options.onSelect === 'function') {
+				$('div.color_cell').on('click', function(e){
+					e.preventDefault();
+					e.stopPropagation();
+					$('.colorpickerClass').hide();
+					self.selectedColorCode = $(this).attr('title');
+					self.options.onSelect.call( this, self.selectedColorCode );
+					
+				});
+			};
+			if (typeof self.options.onmouseover === 'function') {
+				$('div.color_cell').on('mouseover', function(e){
+					e.preventDefault();
+					e.stopPropagation();
+					self.selectedColorCode = $(this).attr('title');
+					self.options.onmouseover.call( this, self.selectedColorCode );
+				});
+			};
+		},
 		
-		$('.colorpickerClass div.color_cell').on('mouseleave', function(e){
-			$(this).css('outline','1px solid #CCC').css('padding','0px');
-		});
-		
-	}
-	$(document).bind('click', function(e) {
-		$('.colorpickerClass').hide();
-	});
-});
+        construct: function() {
+            var self = this;
+			self.options.colorData = self.createColorCodes(self.options.rows * self.options.cols );
+            self.attachToElem(self.getHtmlData());
+            self.enableClick();
+			self.getonSelect();
+        }
+    };
+    
+    $.fn.colorPicker = function(options) {
+        return this.each(function(){
+            var picker = Object.create(Picker);
+            picker.init(options, this);
+        });
+    };
+    
+    $.fn.colorPicker.options = {
+        rows: 4,
+        cols: 4,
+        cellWidth: 20,
+        cellHeight: 20,
+        cellSpacing: 5,
+        zindex: 200,
+        top: 10,
+        left: 10,
+        showCode: 0,
+        colorData: [],
+		onSelect: null
+    };
+})(jQuery);
