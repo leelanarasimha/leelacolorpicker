@@ -1,13 +1,13 @@
 {
   "name": "leelacolorpicker",
-  "version": "1.0",
+  "version": "1.0.1",
   "dependencies": {
     "jquery": "~1.9.1"
   },
 
   "title": "Leela Color Picker",
   "description": "Minimal yet robust color picker",
-  "keywords": [ "leela", "color picker", "leela color picker" ],
+  "keywords": [ "leela", "colorpicker", "leelacolorpicker" ],
 
   "licenses": [
     {
