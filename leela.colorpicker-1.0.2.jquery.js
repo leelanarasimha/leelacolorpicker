@@ -65,18 +65,33 @@ if (typeof Object.create !== 'funtion') {
         },
         attachToElem: function(htmlData) {
             var self = this;
-            self.$elem.append(htmlData);
-            self.$elem.css('position','relative');
-            $('.colorpickerClass').css('top',self.options.top).css('left',self.options.left);
-            self.$elem.find('.colorpickerClass div.color_cell').css('width', self.options.cellWidth).css('height',self.options.cellHeight).css('margin',self.options.cellSpacing).css('outline','1px solid #CCC');
-            self.$elem.find('.colorpickerClass div.no-space').css('width','0px').css('height','0px').css('border','none');
+			var nodeName = self.elem.nodeName;
+			if (nodeName.toLowerCase() == 'input') {
+				self.$elem.wrap('<div class="new"/>');
+				self.$elem.parent().append(htmlData)
+				self.$elem.parent().css('position','relative');
+				$('.colorpickerClass').css('top',self.options.top).css('left',self.options.left);
+				self.$elem.parent().find('.colorpickerClass div.color_cell').css('width', self.options.cellWidth).css('height',self.options.cellHeight).css('margin',self.options.cellSpacing).css('outline','1px solid #CCC');
+				self.$elem.parent().find('.colorpickerClass div.no-space').css('width','0px').css('height','0px').css('border','none');
+			} else {
+				self.$elem.append(htmlData)
+				self.$elem.css('position','relative');
+				$('.colorpickerClass').css('top',self.options.top).css('left',self.options.left);
+				self.$elem.find('.colorpickerClass div.color_cell').css('width', self.options.cellWidth).css('height',self.options.cellHeight).css('margin',self.options.cellSpacing).css('outline','1px solid #CCC');
+				self.$elem.find('.colorpickerClass div.no-space').css('width','0px').css('height','0px').css('border','none');
+			}
         },
 		
         enableClick: function() {
             var self = this;
             self.$elem.on('click', function(e){
                 e.stopPropagation();
-                $(this).find('.colorpickerClass').show();
+				$('.colorpickerClass').hide();
+				if (this.nodeName.toLowerCase() == 'input') {
+					$(this).parent().find('.colorpickerClass').show();
+				} else {
+					$(this).find('.colorpickerClass').show();
+				}
             });
             $(document).bind('click', function() {
                  $('.colorpickerClass').hide();
