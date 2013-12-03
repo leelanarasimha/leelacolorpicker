@@ -47,55 +47,52 @@ if (typeof Object.create !== 'funtion') {
         
         getHtmlData: function() {
             var self = this;
-            var htmlData = '<div style="z-index: '+self.options.zindex+';position: absolute;display: none; background-color: white; border: 1px solid #CCC;" class="colorpickerClass">';
-            var count = 0;
-            for (var i=self.options.rows; i>0; i--) {
-            for (var j=self.options.cols; j>0; j--) {
-                    htmlData += '<div  class="color_cell" title="'+self.options.colorData[count]+'"  style="background-color:'+self.options.colorData[count]+';float: left;"></div>';
-                    if (count == self.options.colorData.length) count = 0;
-                    count++;
-                }
-                htmlData += '<div class="no-space" style="clear: both;"></div>';
-            }
-            if (self.options.showCode) {
-                htmlData += '<div class="show_code" style="text-align: center;font-size: 12px;border-top: 1px solid #ccc;"></div>'
-            }
-            htmlData += '</div>';
+			var htmlData = false;
+			var colorpickerPresent = $('.colorpickerClass').length;
+				htmlData = '<div style="z-index: '+self.options.zindex+';position: absolute;display: none; background-color: white; border: 1px solid #CCC;" class="colorpickerClass">';
+				var count = 0;
+				for (var i=self.options.rows; i>0; i--) {
+				for (var j=self.options.cols; j>0; j--) {
+						htmlData += '<div  class="color_cell" title="'+self.options.colorData[count]+'"  style="background-color:'+self.options.colorData[count]+';float: left;"></div>';
+						if (count == self.options.colorData.length) count = 0;
+						count++;
+					}
+					htmlData += '<div class="no-space" style="clear: both;"></div>';
+				}
+				if (self.options.showCode) {
+					htmlData += '<div class="show_code" style="text-align: center;font-size: 12px;border-top: 1px solid #ccc;"></div>'
+				}
+				htmlData += '</div>'; 
             return htmlData;
         },
         attachToElem: function(htmlData) {
-            var self = this;
-			var nodeName = self.elem.nodeName;
-			if (nodeName.toLowerCase() == 'input') {
-				self.$elem.wrap('<div class="new"/>');
-				self.$elem.parent().append(htmlData)
-				self.$elem.parent().css('position','relative');
-				$('.colorpickerClass').css('top',self.options.top).css('left',self.options.left);
-				self.$elem.parent().find('.colorpickerClass div.color_cell').css('width', self.options.cellWidth).css('height',self.options.cellHeight).css('margin',self.options.cellSpacing).css('outline','1px solid #CCC');
-				self.$elem.parent().find('.colorpickerClass div.no-space').css('width','0px').css('height','0px').css('border','none');
-			} else {
-				self.$elem.append(htmlData)
-				self.$elem.css('position','relative');
-				$('.colorpickerClass').css('top',self.options.top).css('left',self.options.left);
-				self.$elem.find('.colorpickerClass div.color_cell').css('width', self.options.cellWidth).css('height',self.options.cellHeight).css('margin',self.options.cellSpacing).css('outline','1px solid #CCC');
-				self.$elem.find('.colorpickerClass div.no-space').css('width','0px').css('height','0px').css('border','none');
-			}
+			var n = this;
+			$('.colorpickerClass').remove();
+			$('body').append(htmlData);
+			$('.colorpickerClass').hide();
+			
+			$(".colorpickerClass div.color_cell").css("width", n.options.cellWidth).css("height", n.options.cellHeight).css("margin", n.options.cellSpacing).css("outline", "1px solid #CCC");
+            $(".colorpickerClass div.no-space").css("width", "0px").css("height", "0px").css("border", "none")
         },
 		
         enableClick: function() {
             var self = this;
             self.$elem.on('click', function(e){
                 e.stopPropagation();
-				$('.colorpickerClass').hide();
-				if (this.nodeName.toLowerCase() == 'input') {
-					$(this).parent().find('.colorpickerClass').show();
-				} else {
-					$(this).find('.colorpickerClass').show();
-				}
+				$('.colorpickerClass').show();
+			var pos = self.$elem.offset();
+			var top = pos.top + self.options.top;
+			var left = pos.left + self.options.left;
+			$('.colorpickerClass').show().css({
+				top: top,
+				left: left
+			});
             });
+			
             $(document).bind('click', function() {
                  $('.colorpickerClass').hide();
             });
+			
 			$('div.color_cell').on('mouseover', function() {
 				if (self.options.showCode === 1) {
 					$('div.show_code').html($(this).attr('title'));
