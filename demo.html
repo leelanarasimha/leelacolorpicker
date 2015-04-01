@@ -7,7 +7,7 @@
 		<h1>hai</h1>
                 
                 <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
-		<script type='text/javascript' src='leela.colorpicker-1.0.2.jquery.js'></script>
+		<script type='text/javascript' src='leela.colorpicker-1.1.0.jquery.js'></script>
 		<script type='text/javascript'>
 			(function($) {
 				$('h1').colorPicker({
@@ -15,8 +15,9 @@
 		                    	cols: 6,
 					showCode: 0,
 					onSelect: function(colorCode) {
-						
+						$('h1').css('color', colorCode);
 					},
+                    showCode: 1,
 					colorData: ['red','blue','yellow','black'],
 					onmouseover: function(colorCode) {
 					}
